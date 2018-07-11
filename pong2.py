@@ -34,11 +34,13 @@ pygame.display.set_caption('Daylight Pong')
 
 
 def ball_init(right):
-    global ball_pos, ball_vel
+    global ball_pos, ball_vel # velocity
     ball_pos = [WIDTH // 2, HEIGHT // 2]
-    horz = random.randrange(2, 4)
-    vert = random.randrange(1, 3)
-
+    #horz = random.randrange(2, 3)
+    #vert = random.randrange(1, 2)
+	
+    horz = 1
+    vert = 1
     if right == False:
         horz = - horz
 
@@ -104,8 +106,7 @@ def draw(canvas):
         ball_vel[1] = -ball_vel[1]
 
 
-    if int(ball_pos[0]) <= BALL_RADIUS + PAD_WIDTH and int(ball_pos[1]) in range(paddle1_pos[1] - HALF_PAD_HEIGHT,
-                                                                                 paddle1_pos[1] + HALF_PAD_HEIGHT, 1):
+    if int(ball_pos[0]) <= BALL_RADIUS + PAD_WIDTH and int(ball_pos[1]) in range(paddle1_pos[1] - HALF_PAD_HEIGHT, paddle1_pos[1] + HALF_PAD_HEIGHT, 1):
         ball_vel[0] = -ball_vel[0]
         ball_vel[0] *= 1.1
         ball_vel[1] *= 1.1
@@ -136,13 +137,13 @@ def keydown(event):
     global paddle1_vel, paddle2_vel
 
     if event.key == K_UP:
-        paddle2_vel = -8
+        paddle2_vel = -4
     elif event.key == K_DOWN:
-        paddle2_vel = 8
+        paddle2_vel = 4
     elif event.key == K_z:
-        paddle1_vel = -8
+        paddle1_vel = -4
     elif event.key == K_s:
-        paddle1_vel = 8
+        paddle1_vel = 4
 
 
 def keyup(event):
