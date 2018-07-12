@@ -130,7 +130,7 @@ def draw(canvas):
     
 #keydown handler
 def server_keydown(event):
-    global paddle1_vel, paddle2_vel
+    global paddle1_vel
     
     if event.key == K_UP:
         paddle1_vel = -8
@@ -147,7 +147,7 @@ def server_keydown(event):
 
 #keyup handler
 def server_keyup(event):
-    global paddle1_vel, paddle2_vel
+    global paddle1_vel
     
     if event.key in (K_w, K_s):
         paddle1_vel = 0
@@ -155,10 +155,13 @@ def server_keyup(event):
         paddle1_vel = 0
 
 def client_down():
+    global paddle2_vel
     paddle2_vel = 8
 def client_up():
+    global paddle2_vel
     paddle2_vel = -8
 def client_keyup():
+    global paddle2_vel
     paddle2_vel = 0
 init()
 
