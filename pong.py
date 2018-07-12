@@ -134,16 +134,16 @@ def server_keydown(event):
     
     if event.key == K_UP:
         paddle1_vel = -8
-        conn.send('u')
+        #conn.send('u')
     elif event.key == K_DOWN:
         paddle1_vel = 8
-        conn.send('d')
+        #conn.send('d')
     elif event.key == K_w:
         paddle1_vel = -8
-        conn.send('u')
+        #conn.send('u')
     elif event.key == K_s:
         paddle1_vel = 8
-        conn.send('d')
+        #conn.send('d')
 
 #keyup handler
 def server_keyup(event):
@@ -175,7 +175,7 @@ def create_game(): #если сервер
     print 'connected:', addr
 
     while True:
-        data = conn.recv(1) #8 бит: первый - действие/бездействие, остальные - команда
+        data = conn.recv(1)
         #if not data:
         #    break
         #conn.send(data.upper())
@@ -196,10 +196,15 @@ def create_game(): #если сервер
 
             if event.type == KEYDOWN:
                 server_keydown(event)
+                if event.key in (K_UP, K_w):
+                    conn.send('u')
+                if event.key in (K_DOWN, K_s):
+                    conn.send('d')
             elif event.type == KEYUP:
                 server_keyup(event)
                 conn.send('n')
             elif event.type == QUIT:
+                conn.send('q')
                 pygame.quit()
                 sys.exit()
             
@@ -211,12 +216,45 @@ def create_game(): #если сервер
 def connect_game(localIP): #если клиент
     sock = socket.socket()
     sock.connect((localIP, 9090))
-    sock.send('hello, world!')
+    #sock.send('hello, world!')
+    while True:
+        data = sock.recv(1)
+        #if not data:
+        #    break
+        #conn.send(data.upper())
 
-    data = sock.recv(1024)
+        draw(window)
+
+        if data == 'u': #клиентское "вверх"
+            client_up()
+        if data == 'd': #клиентское "вниз"
+            client_down()
+        if data == 'n': #клиентское "ничего"
+            client_keyup()
+        if data == 'q': #клиентский "выход"
+            conn.close()
+            break
+
+        if event.type == KEYDOWN:
+                server_keydown(event)
+                if event.key in (K_UP, K_w):
+                    sock.send('u')
+                if event.key in (K_DOWN, K_s):
+                    sock.send('d')
+            elif event.type == KEYUP:
+                server_keyup(event)
+                sock.send('n')
+            elif event.type == QUIT:
+                sock.send('q')
+                pygame.quit()
+                sys.exit()
+            
+        pygame.display.update()
+    fps.tick(60)
+
     sock.close()
 
-    print data
+    #print data
 
 #game loop
 while True:
